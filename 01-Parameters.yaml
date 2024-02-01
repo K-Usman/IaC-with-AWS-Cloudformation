@@ -1,0 +1,37 @@
+---
+Parameters:
+  VMNAME:
+    Description: Please specify vm name
+    Type: String
+  Volume:
+    Description: Please enter the root volume for ec2 machine
+    Type: Number
+    MinValue: 8
+    MaxValue: 12
+  VMType: 
+    Description: Please specify vm type that are available under free tier
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+
+
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-a4c7edb2
+      InstanceType: !Ref VMType
+      Tags:
+        - Key: Name
+          Value: !Ref VMNAME
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp3
+            VolumeSize: !Ref Volume
+            DeleteOnTermination: 'false'
+            Encrypted: 'true'
